@@ -5,15 +5,7 @@ has_uuid
 
 It depends on the [uuidtools](http://uuidtools.rubyforge.org/) gem.
 
-This is a fork - full credits for the source code go to [has_uuid](http://github.com/norbert/has_uuid).
-
-What I changed:
-
-a) Made it rails 3.1 compatible.
-
-b) Bundler'ized it - you can now use and manage it as a gem, not as a rails plugin.
-
-c) Added generate_uuid as a class method
+Initial credits go to [has_uuid](http://github.com/norbert/has_uuid).
 
 Installation
 ------------
@@ -29,39 +21,33 @@ to your Gemfile and run
 Usage
 -----
 
-	class Post < ActiveRecord::Base
-	  # automatically assign a UUID to the "uuid" column on create
-	  has_uuid
-	end
+class Post < ActiveRecord::Base
+  # automatically assign a UUID to the "uuid" column on create
+  has_uuid
+end
 
-	class Comment < ActiveRecord::Base
-	  # skip assignment on create
-	  has_uuid :auto => false
-	end
+class Comment < ActiveRecord::Base
+  # skip assignment on create
+  has_uuid :auto => false
+end
 
-	class User < ActiveRecord::Base
-	  # store the UUID in the "token" column, generate version 1 UUIDs
-	  has_uuid :column => :token, :generator => :timestamp
-	end
+class User < ActiveRecord::Base
+  # store the UUID in the "token" column
+  has_uuid :column => :token, :generator => :timestamp
+end
 
-	# assign a UUID if a valid one is not already present
-	@post.assign_uuid
+# assign a UUID if a valid one is not already present
+@post.assign_uuid
 
-	# assign a UUID, replacing whatever is already there
-	@post.assign_uuid(:force => true)
+# assign a UUID, replacing whatever is already there
+@post.assign_uuid(:force => true)
 
-	# assign a UUID and save, replacing whatever is there
-	@post.assign_uuid!
+# assign a UUID and save, replacing whatever is there
+@post.assign_uuid!
 
-	# check if the current UUID is valid
-	@post.uuid_valid?
+# check if the current UUID is valid
+@post.uuid_valid?
 
-	# Generate a UUID to use it later
-	Post.generate_uuid
+# Generate a UUID to use it later
+Post.generate_uuid
 
-Credits
--------
-
-* Norbert Crombach
-* Todd Eichel
-* Joerg Batterman
