@@ -85,4 +85,12 @@ class HasUuidTest < Test::Unit::TestCase
     @thingy.reload
     assert_nil @thingy.uuid
   end
+
+  def should_assign_an_uuid_if_we_do_not_validate_the_overall_record
+    @widget = Widget.new
+    assert_nil @widget.uuid
+    @widget.save :validate => false
+    @widget.reload
+    assert @widget.uuid_valid?
+  end
 end

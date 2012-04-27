@@ -1,41 +1,33 @@
 require 'uuidtools'
 
-module ActiveRecord #:nodoc:
-  module Acts #:nodoc:
-    # Use this extension to assign a UUID to your models.
-    #
-    # Example:
-    #
-    #    class Post < ActiveRecord::Base
-    #      has_uuid
-    #    end
-    #
-    # That is all.
+module ActiveRecord
+  module Acts
+    # has_uuid adds a UUID to your models. See the README for details.
     module HasUuid
-      GENERATORS = [:random, :timestamp] #:nodoc:
+      GENERATORS = [:random, :timestamp]
+      DEFAULT_OPTIONS = {:auto => true, :generator => :random, :column => :uuid}
 
-      # Configuration options are:
-      #
-      # * <tt>:column</tt> - specifies the column in which to store the UUID (default: +uuid+).
-      # * <tt>:auto</tt> - specifies whether the plugin should assign a UUID on create (default: true).
-      # * <tt>:generator</tt> - sets the UUID generator. Possible values are <tt>:random</tt> for version 4 (default) and <tt>:timestamp</tt> for version 1.
+      # Class Macro which actually lets models use has_uuid
+      # @param options:
+      # * column:   The column in which to store the UUID (default: uuid).
+      # * auto:     Assign a UUID on create (default: true).
+      # * generator The UUID generator. Possible values are `random` default) and `timestamp`.
       def has_uuid(options = {})
-        options.reverse_merge!(:auto => true, :generator => :random, :column => :uuid)
-        raise ArgumentError, "invalid UUID generator" unless GENERATORS.include?(options[:generator])
+        options.reverse_merge! DEFAULT_OPTIONS
+        raise ArgumentError, "Invalid UUID generator #{options[:generator]}" unless GENERATORS.include?(options[:generator])
 
         class_eval do
-          send :include, InstanceMethods # hide include from RDoc
+          include InstanceMethods
 
           if options[:auto]
-            # always applies to subclasses
-            before_validation(:on => :create) { assign_uuid }
+            before_save(:on => :create) { assign_uuid }
           end
 
-          class_inheritable_reader :uuid_column
-          write_inheritable_attribute :uuid_column, options[:column]
+          class_attribute :uuid_column
+          self.uuid_column = options[:column]
 
-          class_inheritable_reader :uuid_generator
-          write_inheritable_attribute :uuid_generator, options[:generator]
+          class_attribute :uuid_generator
+          self.uuid_generator = options[:generator]
         end
       end
 
@@ -43,8 +35,7 @@ module ActiveRecord #:nodoc:
         UUIDTools::UUID.send("#{uuid_generator}_create").to_s
       end
 
-
-      module InstanceMethods #:nodoc:
+      module InstanceMethods
         def assign_uuid(options = {})
           return if uuid_valid? unless options[:force]
 
