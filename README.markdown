@@ -21,6 +21,7 @@ to your Gemfile and run
 Usage
 -----
 
+```Ruby
 class Post < ActiveRecord::Base
   # automatically assign a UUID to the "uuid" column on create
   has_uuid
@@ -50,4 +51,4 @@ end
 
 # Generate a UUID to use it later
 Post.generate_uuid
-
+```
