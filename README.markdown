@@ -7,6 +7,8 @@ It depends on the [uuidtools](http://uuidtools.rubyforge.org/) gem.
 
 Initial credits go to [has_uuid](http://github.com/norbert/has_uuid).
 
+Travis build status: ![Travis build status](http://travis-ci.org/troessner/has_uuid.png)
+
 Installation
 ------------
 
