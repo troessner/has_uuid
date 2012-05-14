@@ -8,6 +8,11 @@ class Thingy < ActiveRecord::Base
   has_uuid :auto => false
 end
 
+class ParanoidWidget < Widget
+  set_table_name 'widgets'
+  validates_presence_of :uuid
+end
+
 class HasUuidTest < Test::Unit::TestCase
   def test_should_generate_a_valid_uuid
     uuid = Widget.generate_uuid
@@ -92,5 +97,12 @@ class HasUuidTest < Test::Unit::TestCase
     @widget.save :validate => false
     @widget.reload
     assert @widget.uuid_valid?
+  end
+
+  def test_assign_uuid_before_validation
+    paranoid_widget = ParanoidWidget.new
+    assert !paranoid_widget.uuid_valid?
+    assert paranoid_widget.valid?
+    assert paranoid_widget.uuid_valid?
   end
 end
