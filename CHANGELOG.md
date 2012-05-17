@@ -1,6 +1,6 @@
 ### Not released yet:
 
-* (no changes)
+* (exviva) Loosen up dependencies to support activerecord 3.2.x
 
 ### 0.0.9 (2012-05-14)
 

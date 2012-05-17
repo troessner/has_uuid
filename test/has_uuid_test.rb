@@ -9,7 +9,7 @@ class Thingy < ActiveRecord::Base
 end
 
 class ParanoidWidget < Widget
-  set_table_name 'widgets'
+  self.table_name = 'widgets'
   validates_presence_of :uuid
 end
 
