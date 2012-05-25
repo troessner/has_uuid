@@ -103,6 +103,56 @@ class HasUuidTest < Test::Unit::TestCase
     paranoid_widget = ParanoidWidget.new
     assert !paranoid_widget.uuid_valid?
     assert paranoid_widget.valid?
-    assert paranoid_widget.uuid_valid?
+  end
+
+  def test_should_raise_ArgumentError_if_we_pass_in_an_invalid_assign_uuid_declaration
+    assert_raise ArgumentError do
+      Class.new(ActiveRecord::Base) do
+        self.table_name = 'widgets'
+        has_uuid assign_uuid: :foobar
+      end.new
+    end
+  end
+
+  def test_should_assign_a_uuid_before_validation_if_we_do_not_set_assign_uuid
+    thing = Class.new ActiveRecord::Base do
+      self.table_name = 'widgets'
+      has_uuid
+    end.new
+    thing.valid?
+    assert thing.uuid.present?
+  end
+
+  def test_should_assign_a_uuid_before_validation_if_we_pass_in_assign_uuid_before_validation
+    thing = Class.new ActiveRecord::Base do
+      self.table_name = 'widgets'
+      has_uuid assign_uuid: :before_validation
+    end.new
+    thing.valid?
+    assert thing.uuid.present?
+  end
+
+  def test_should_assign_a_uuid_after_validation_if_we_pass_in_assign_uuid_before_save
+    thing = Class.new ActiveRecord::Base do
+      self.table_name = 'widgets'
+      has_uuid assign_uuid: :before_save
+    end.new
+    assert thing.valid?
+    assert !thing.uuid.present?
+    thing.save
+    assert thing.uuid.present?
+  end
+
+  def test_should_assign_a_uuid_before_validation_and_before_save_if_we_pass_in_assign_uuid_always
+    klass = Class.new ActiveRecord::Base do
+      self.table_name = 'widgets'
+      has_uuid assign_uuid: :always
+    end
+    thing = klass.new
+    assert !thing.uuid.present?
+    assert thing.uuid.present?
+    thing = klass.new
+    thing.save validate: false
+    assert thing.uuid.present?
   end
 end
