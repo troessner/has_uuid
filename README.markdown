@@ -7,7 +7,7 @@ It depends on the [uuidtools](http://uuidtools.rubyforge.org/) gem.
 
 Initial credits go to [has_uuid](http://github.com/norbert/has_uuid).
 
-Travis build status: ![Travis build status](http://travis-ci.org/troessner/has_uuid.png?branch=master)
+Travis build status: ![Travis build status](https://travis-ci.org/troessner/has_uuid.png?branch=master)
 
 Installation
 ------------
@@ -19,6 +19,16 @@ Add
 to your Gemfile and run
 
 >> bundle install
+
+Finally, you need to create and run a migration which adds an `uuid` column to the model to which you want to add an UUID:
+
+```Ruby
+class AddUuidToOrders < ActiveRecord::Migration
+  def change
+    add_column :orders, :uuid, :string
+  end
+end
+```
 
 Usage
 -----
