@@ -1,1 +1,1 @@
-rvm --create 1.9.2-p180@has_uuid
+rvm --create 2.0.0@has_uuid
